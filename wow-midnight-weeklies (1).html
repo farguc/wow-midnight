@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midnight Weeklies — WoW Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #06030f;
+    --deep: #0d0820;
+    --mid: #160f2e;
+    --surface: #1e1540;
+    --card: #231a4a;
+    --border: #3a2b6e;
+    --glow: #7b4fd4;
+    --gold: #c8922a;
+    --gold-light: #f0c060;
+    --crimson: #a0182a;
+    --silver: #b8c4d8;
+    --muted: #7a7a9a;
+    --text: #e8dff8;
+    --white: #f5f0ff;
+    --done-bg: #0f1f0f;
+    --done-border: #2a4a2a;
+    --done-text: #5a8a5a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Crimson Pro', serif;
+    font-size: 17px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Starfield background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, #1a0a3a 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 20% 80%, #0a0520 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, #120830 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite alternate ease-in-out;
+  }
+
+  @keyframes twinkle {
+    from { opacity: var(--min-op, 0.1); transform: scale(1); }
+    to   { opacity: var(--max-op, 0.8); transform: scale(1.3); }
+  }
+
+  /* Void tendrils */
+  .tendrils {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 20% 60% at 0% 50%, rgba(80,20,120,0.15) 0%, transparent 70%),
+      radial-gradient(ellipse 15% 80% at 100% 30%, rgba(60,10,100,0.12) 0%, transparent 70%);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 20px 0 40px;
+    position: relative;
+  }
+
+  .header-emblem {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    position: relative;
+  }
+
+  .header-emblem svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 12px rgba(123,79,212,0.8));
+    animation: emblem-pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes emblem-pulse {
+    0%, 100% { filter: drop-shadow(0 0 12px rgba(123,79,212,0.8)); }
+    50%       { filter: drop-shadow(0 0 24px rgba(180,100,255,1)); }
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(22px, 5vw, 38px);
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-shadow: 0 0 30px rgba(150,80,255,0.6), 0 0 60px rgba(100,40,200,0.3);
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+
+  .reset-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 8px 20px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: rgba(30,21,64,0.6);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--silver);
+  }
+
+  .reset-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--glow);
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(123,79,212,0.6); }
+    50%       { box-shadow: 0 0 0 4px rgba(123,79,212,0); }
+  }
+
+  /* Progress bar */
+  .progress-wrap {
+    background: rgba(30,21,64,0.7);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .progress-label {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--gold);
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--glow), #b06aff);
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 12px rgba(123,79,212,0.7);
+    position: relative;
+  }
+
+  .progress-count {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(35,26,74,0.9), rgba(25,16,58,0.9));
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+  }
+
+  .section-header:hover { background: linear-gradient(135deg, rgba(45,34,90,0.9), rgba(32,22,72,0.9)); }
+
+  .section-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    flex: 1;
+  }
+
+  .section-count {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .section-chevron {
+    color: var(--muted);
+    font-size: 12px;
+    transition: transform 0.3s;
+  }
+
+  .section.collapsed .section-chevron { transform: rotate(-90deg); }
+  .section.collapsed .items-list { display: none; }
+
+  .items-list {
+    background: rgba(22,15,46,0.7);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+  }
+
+  /* Items */
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 13px 20px;
+    border-bottom: 1px solid rgba(58,43,110,0.4);
+    cursor: pointer;
+    transition: background 0.18s;
+    position: relative;
+  }
+
+  .item:last-child { border-bottom: none; }
+  .item:hover { background: rgba(123,79,212,0.08); }
+
+  .item.done {
+    background: rgba(10,25,10,0.4);
+  }
+
+  .checkbox {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.2s;
+    background: rgba(10,6,20,0.5);
+  }
+
+  .item:hover .checkbox { border-color: var(--glow); }
+
+  .item.done .checkbox {
+    background: #2a4a2a;
+    border-color: #4a8a4a;
+  }
+
+  .checkmark {
+    display: none;
+    color: #6aaa6a;
+    font-size: 14px;
+    font-weight: bold;
+  }
+
+  .item.done .checkmark { display: block; }
+
+  .item-body { flex: 1; min-width: 0; }
+
+  .item-name {
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.35;
+    transition: color 0.2s;
+  }
+
+  .item.done .item-name {
+    color: var(--done-text);
+    text-decoration: line-through;
+    text-decoration-color: #3a6a3a;
+  }
+
+  .item-desc {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .item.done .item-desc { color: #3a5a3a; }
+
+  .item-badge {
+    flex-shrink: 0;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-top: 3px;
+    white-space: nowrap;
+  }
+
+  .badge-gear    { background: rgba(60,30,100,0.6); color: #b06aff; border: 1px solid #5a3a8a; }
+  .badge-vault   { background: rgba(30,60,30,0.6); color: #6aaa6a; border: 1px solid #3a6a3a; }
+  .badge-renown  { background: rgba(80,50,10,0.6); color: #d4a030; border: 1px solid #8a6a20; }
+  .badge-crest   { background: rgba(20,50,80,0.6); color: #60a8d4; border: 1px solid #2a6a9a; }
+  .badge-weekly  { background: rgba(80,20,30,0.6); color: #d46070; border: 1px solid #8a3040; }
+  .badge-optional{ background: rgba(40,40,40,0.5); color: #888; border: 1px solid #555; }
+
+  /* Divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 20px;
+  }
+
+  .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .divider-text {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Actions */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(30,21,64,0.7);
+    color: var(--silver);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn:hover { background: rgba(58,43,110,0.5); color: var(--white); border-color: var(--glow); }
+  .btn.danger:hover { background: rgba(80,10,20,0.5); color: #ff8090; border-color: var(--crimson); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 32px 0 0;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    letter-spacing: 0.05em;
+  }
+
+  footer a { color: var(--glow); text-decoration: none; }
+  footer a:hover { color: var(--gold-light); }
+
+  /* Celebration animation */
+  @keyframes celebrate {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.04); }
+    100% { transform: scale(1); }
+  }
+
+  .item.just-checked { animation: celebrate 0.3s ease-out; }
+
+  /* Responsive */
+  @media (max-width: 540px) {
+    .item-badge { display: none; }
+    h1 { font-size: 22px; }
+    .progress-wrap { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="tendrils"></div>
+
+<div class="container">
+
+  <header>
+    <div class="header-emblem">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" fill="none" stroke="#4a2a8a" stroke-width="1.5" opacity="0.6"/>
+        <circle cx="32" cy="32" r="22" fill="none" stroke="#6a3aaa" stroke-width="1" opacity="0.5"/>
+        <!-- Void eye -->
+        <ellipse cx="32" cy="32" rx="14" ry="10" fill="#1a0830" stroke="#7b4fd4" stroke-width="1.5"/>
+        <ellipse cx="32" cy="32" rx="8" ry="8" fill="#2a0f50"/>
+        <circle cx="32" cy="32" r="5" fill="#7b4fd4" opacity="0.9"/>
+        <circle cx="32" cy="32" r="3" fill="#c08aff"/>
+        <circle cx="34" cy="30" r="1.2" fill="white" opacity="0.9"/>
+        <!-- Rune marks -->
+        <path d="M32 4 L34 12 L32 10 L30 12 Z" fill="#c8922a" opacity="0.7"/>
+        <path d="M32 60 L34 52 L32 54 L30 52 Z" fill="#c8922a" opacity="0.7"/>
+        <path d="M4 32 L12 30 L10 32 L12 34 Z" fill="#c8922a" opacity="0.7"/>
+        <path d="M60 32 L52 30 L54 32 L52 34 Z" fill="#c8922a" opacity="0.7"/>
+      </svg>
+    </div>
+    <h1>Midnight Weeklies</h1>
+    <div class="subtitle">World of Warcraft · Season 1</div>
+    <div class="reset-info">
+      <div class="reset-dot"></div>
+      <span id="reset-timer">Resets Wednesday 08:00 UTC</span>
+    </div>
+  </header>
+
+  <div class="progress-wrap">
+    <span class="progress-label">Weekly Progress</span>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <span class="progress-count" id="progress-count">0 / 0</span>
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="expandAll()">Expand All</button>
+    <button class="btn" onclick="collapseAll()">Collapse All</button>
+    <button class="btn danger" onclick="resetAll()">Reset Week</button>
+  </div>
+
+  <div id="checklist"></div>
+
+  <footer>
+    Data based on <a href="https://www.icy-veins.com/wow/weekly-to-do-list" target="_blank">Icy Veins</a> &amp; <a href="https://nexttier.pro/guide/midnight-weekly-checklist" target="_blank">NextTier</a> · Resets are Wednesday 08:00 UTC · Not affiliated with Blizzard Entertainment
+  </footer>
+
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+// DATA
+// ────────────────────────────────────────────────
+const SECTIONS = [
+  {
+    id: 'gear',
+    icon: '⚔️',
+    title: 'Raid & Gear',
+    items: [
+      { id: 'r1', name: 'Voidspire (LFR / Normal / Heroic)', desc: 'Xal\'atath\'s stronghold — 6 bosses. Queue LFR and try for your 4-piece tier set.', badge: 'gear' },
+      { id: 'r2', name: 'The Dreamrift (LFR / Normal / Heroic)', desc: 'Single-boss raid where dreams meet reality. Good for tier tokens.', badge: 'gear' },
+      { id: 'r3', name: 'March of Quel\'Danas (LFR / Normal / Heroic)', desc: '2-boss raid — opens week of March 31st. Full of lore spoilers!', badge: 'gear' },
+      { id: 'r4', name: 'Collect Great Vault Reward', desc: 'Visit the Great Vault in Silvermoon to claim your weekly chest on reset day.', badge: 'vault' },
+    ]
+  },
+  {
+    id: 'mythic',
+    icon: '🗝️',
+    title: 'Mythic+',
+    items: [
+      { id: 'm1', name: 'Complete 8 Mythic+ Dungeons (Vault — all slots)', desc: 'Fill all 3 Dungeon Great Vault slots. Higher keys = better vault options.', badge: 'vault' },
+      { id: 'm2', name: 'Weekly Mythic+ Key Push', desc: 'Farm the highest key you can manage — up to +10 for optimal crest drops.', badge: 'crest' },
+      { id: 'm3', name: 'M0 World Tour (alt-friendly)', desc: 'Clear every dungeon on Mythic 0 for Veteran gear and vault slots.', badge: 'gear' },
+    ]
+  },
+  {
+    id: 'world',
+    icon: '🌍',
+    title: 'World Content',
+    items: [
+      { id: 'w1', name: 'Weekly World Event Quest (Lady Liadrin)', desc: 'Complete a weekly World Event for a cache and a Spark of Midnight.', badge: 'weekly' },
+      { id: 'w2', name: 'Saltheril\'s Soiree — Eversong Woods', desc: 'Weekly event tied to Silvermoon Court faction. Earns renown + potential gear.', badge: 'renown' },
+      { id: 'w3', name: 'Abundance Event — Zul\'Aman', desc: 'Weekly zone event. Earns Hara\'ti renown + gear cache.', badge: 'renown' },
+      { id: 'w4', name: 'Legends of the Haranir — Harandar', desc: 'Weekly zone event granting Haranir renown + rewards.', badge: 'renown' },
+      { id: 'w5', name: 'Stormarion Assault — Voidstorm', desc: 'Weekly zone assault. Earns Singularity renown + cache.', badge: 'renown' },
+      { id: 'w6', name: 'World Boss Kill (×4 available)', desc: 'Kill each available world boss once for a shot at Champion gear.', badge: 'gear' },
+    ]
+  },
+  {
+    id: 'delves',
+    icon: '🕳️',
+    title: 'Delves',
+    items: [
+      { id: 'd1', name: 'Call to Delves Weekly Quest (Aethas Sunreaver)', desc: 'Rewards a Cache of Quel\'Thalas Treasures containing a Normal-mode raid item!', badge: 'weekly' },
+      { id: 'd2', name: 'Fill World Great Vault Slots (4 Delves)', desc: 'Complete at least 4 Delves to unlock all World vault slots.', badge: 'vault' },
+      { id: 'd3', name: 'Push Delve Tier for Better Loot', desc: 'Higher Delve tiers reward gear and more vault quality. Push your progression.', badge: 'gear' },
+    ]
+  },
+  {
+    id: 'renown',
+    icon: '🏅',
+    title: 'Renown & Factions',
+    items: [
+      { id: 'rn1', name: 'Silvermoon Court — Renown Track', desc: 'Helm at Renown 9 (ilvl 246). Do weeklies and kill zone rares for progress.', badge: 'renown' },
+      { id: 'rn2', name: 'The Singularity — Renown Track', desc: 'Trinket at Renown 7 (ilvl 246) — considered a must-have.', badge: 'renown' },
+      { id: 'rn3', name: 'The Hara\'ti — Renown Track', desc: 'Belt at Renown 8 (ilvl 246). Weekly quests and event for progress.', badge: 'renown' },
+      { id: 'rn4', name: 'Amani — Renown Track', desc: 'Necklace at Renown 9 (ilvl 246). Zul\'Aman content and weeklies.', badge: 'renown' },
+      { id: 'rn5', name: 'Claim Renown Vendor Gear Rewards', desc: 'Visit each faction vendor at the right renown threshold to claim your ilvl 246 pieces.', badge: 'gear' },
+    ]
+  },
+  {
+    id: 'prey',
+    icon: '🎯',
+    title: 'Prey System',
+    items: [
+      { id: 'p1', name: 'Complete Weekly Prey Cache', desc: 'Hunt targets in Murder Row, Silvermoon City (Astalor Bloodsworn). Earn Remnants of Anguish.', badge: 'weekly' },
+      { id: 'p2', name: 'Kill Weekly Rare Spawns (1× per zone)', desc: 'Each zone has rares on a weekly lockout — kill each once for renown.', badge: 'renown' },
+    ]
+  },
+  {
+    id: 'crafting',
+    icon: '⚗️',
+    title: 'Professions & Crafting',
+    items: [
+      { id: 'c1', name: 'Weekly Profession Knowledge Points', desc: 'Complete your profession weekly quests and casts to maximise Knowledge Point gains.', badge: 'weekly' },
+      { id: 'c2', name: 'Spark of Midnight Acquisition', desc: 'Collect Sparks via the weekly World Event and crafting orders. Essential for crafted gear.', badge: 'crest' },
+      { id: 'c3', name: 'Catalyst Charge (Tier Set Conversion)', desc: 'Use your Catalyst charge to convert a non-tier piece into a tier slot if needed.', badge: 'gear' },
+      { id: 'c4', name: 'Crafting Orders / Public Orders', desc: 'Check public orders for profitable fills or to get your own gear crafted.', badge: 'optional' },
+    ]
+  },
+  {
+    id: 'optional',
+    icon: '🏠',
+    title: 'Optional / Alt Content',
+    items: [
+      { id: 'o1', name: 'Housing Monthly Neighborhood Activities', desc: 'Start housing activities early in the month — treat it as a cooldown activity.', badge: 'optional' },
+      { id: 'o2', name: 'Zone Treasures & Achievements', desc: 'Collect zone treasures for renown + progress toward the meta achievement.', badge: 'optional' },
+      { id: 'o3', name: 'Warband / Alt Catch-up', desc: 'Warbands share progress — your alt can benefit from main\'s renown gains.', badge: 'optional' },
+      { id: 'o4', name: 'Story Campaign Chapter', desc: 'Progress the main story quest line if any new chapter is available this week.', badge: 'optional' },
+    ]
+  },
+];
+
+const BADGE_LABELS = {
+  gear: 'Gear', vault: 'Great Vault', renown: 'Renown',
+  crest: 'Crests', weekly: 'Weekly', optional: 'Optional'
+};
+
+// ────────────────────────────────────────────────
+// STATE (localStorage)
+// ────────────────────────────────────────────────
+const STORAGE_KEY = 'midnight-weeklies-v1';
+
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch { return {}; }
+}
+
+function saveState(state) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+let state = loadState();
+
+// ────────────────────────────────────────────────
+// RENDER
+// ────────────────────────────────────────────────
+function render() {
+  const container = document.getElementById('checklist');
+  container.innerHTML = '';
+
+  SECTIONS.forEach(section => {
+    const sectionDone = section.items.filter(i => state[i.id]).length;
+    const sectionTotal = section.items.length;
+    const isCollapsed = state['_section_' + section.id] === true;
+
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section' + (isCollapsed ? ' collapsed' : '');
+    sectionEl.dataset.id = section.id;
+
+    const header = document.createElement('div');
+    header.className = 'section-header';
+    header.innerHTML = `
+      <span class="section-icon">${section.icon}</span>
+      <span class="section-title">${section.title}</span>
+      <span class="section-count">${sectionDone}/${sectionTotal}</span>
+      <span class="section-chevron">▼</span>
+    `;
+    header.addEventListener('click', () => toggleSection(section.id, sectionEl));
+
+    const list = document.createElement('div');
+    list.className = 'items-list';
+
+    section.items.forEach(item => {
+      const done = !!state[item.id];
+      const itemEl = document.createElement('div');
+      itemEl.className = 'item' + (done ? ' done' : '');
+      itemEl.dataset.id = item.id;
+      itemEl.innerHTML = `
+        <div class="checkbox"><span class="checkmark">✓</span></div>
+        <div class="item-body">
+          <div class="item-name">${item.name}</div>
+          <div class="item-desc">${item.desc}</div>
+        </div>
+        <span class="item-badge badge-${item.badge}">${BADGE_LABELS[item.badge]}</span>
+      `;
+      itemEl.addEventListener('click', () => toggleItem(item.id, itemEl));
+      list.appendChild(itemEl);
+    });
+
+    sectionEl.appendChild(header);
+    sectionEl.appendChild(list);
+    container.appendChild(sectionEl);
+  });
+
+  updateProgress();
+}
+
+function toggleItem(id, el) {
+  state[id] = !state[id];
+  saveState(state);
+  if (state[id]) { el.classList.add('just-checked'); setTimeout(() => el.classList.remove('just-checked'), 350); }
+  el.classList.toggle('done', !!state[id]);
+  el.querySelector('.item-name').style.textDecoration = state[id] ? 'line-through' : '';
+  updateProgress();
+  updateSectionCounts();
+}
+
+function toggleSection(id, el) {
+  const collapsed = el.classList.toggle('collapsed');
+  state['_section_' + id] = collapsed;
+  saveState(state);
+}
+
+function updateProgress() {
+  const allItems = SECTIONS.flatMap(s => s.items);
+  const done = allItems.filter(i => state[i.id]).length;
+  const total = allItems.length;
+  const pct = total ? (done / total) * 100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-count').textContent = done + ' / ' + total;
+}
+
+function updateSectionCounts() {
+  document.querySelectorAll('.section').forEach(sEl => {
+    const id = sEl.dataset.id;
+    const section = SECTIONS.find(s => s.id === id);
+    if (!section) return;
+    const done = section.items.filter(i => state[i.id]).length;
+    sEl.querySelector('.section-count').textContent = done + '/' + section.items.length;
+  });
+}
+
+function expandAll() {
+  SECTIONS.forEach(s => { state['_section_' + s.id] = false; });
+  saveState(state); render();
+}
+
+function collapseAll() {
+  SECTIONS.forEach(s => { state['_section_' + s.id] = true; });
+  saveState(state); render();
+}
+
+function resetAll() {
+  if (!confirm('Reset all checkboxes for this week?')) return;
+  const sectionKeys = SECTIONS.map(s => '_section_' + s.id);
+  const newState = {};
+  sectionKeys.forEach(k => { if (state[k] !== undefined) newState[k] = state[k]; });
+  state = newState;
+  saveState(state);
+  render();
+}
+
+// ────────────────────────────────────────────────
+// RESET TIMER
+// ────────────────────────────────────────────────
+function updateResetTimer() {
+  const now = new Date();
+  const next = new Date(now);
+  next.setUTCHours(8, 0, 0, 0);
+  // Find next Wednesday (day 3)
+  const day = next.getUTCDay();
+  let daysUntil = (3 - day + 7) % 7;
+  if (daysUntil === 0 && now >= next) daysUntil = 7;
+  next.setUTCDate(next.getUTCDate() + daysUntil);
+  const diff = next - now;
+  const h = Math.floor(diff / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const label = h > 48
+    ? `Resets in ${Math.floor(h/24)}d ${h%24}h`
+    : `Resets in ${h}h ${m}m`;
+  document.getElementById('reset-timer').textContent = label;
+}
+
+// ────────────────────────────────────────────────
+// STARS
+// ────────────────────────────────────────────────
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${(Math.random()*4+2).toFixed(1)}s;
+      --delay:${(Math.random()*5).toFixed(1)}s;
+      --min-op:${(Math.random()*0.15).toFixed(2)};
+      --max-op:${(Math.random()*0.5+0.3).toFixed(2)};
+    `;
+    container.appendChild(s);
+  }
+}
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
+createStars();
+render();
+updateResetTimer();
+setInterval(updateResetTimer, 30000);
+</script>
+</body>
+</html>
